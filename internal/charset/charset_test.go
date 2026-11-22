@@ -31,6 +31,10 @@ var extractCharsetFromMetaTestCases = []struct {
 	`charset = a`, "a",
 }, {
 	`charset = a;`, "a",
+}, {
+	`CHARSET = a`, "a",
+}, {
+	`CharSet=a;`, "a",
 }}
 
 func TestExtractCharsetFromMeta(t *testing.T) {
@@ -76,6 +80,10 @@ var fromHTMLTestCases = []struct {
 	`<meta content="text/html; charset=iso-8859-15" http-equiv="content-type" >`, "iso-8859-15",
 }, {
 	`<meta http-equiv="content-type" content="a/b; charset=щ">`, "щ",
+}, {
+	`<meta http-equiv="content-type" content="a/b; CHARSET=windows-1252">`, "windows-1252",
+}, {
+	`<meta http-equiv="content-type" content="a/b; CharSet=windows-1252">`, "windows-1252",
 }, {
 	`<f 1=2 /><meta b="b" charset="щ">`, "щ",
 }}

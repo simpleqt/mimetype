@@ -239,11 +239,14 @@ func fromHTML(s scan.Bytes) string {
 // https://html.spec.whatwg.org/multipage/urls-and-fetching.html#algorithm-for-extracting-a-character-encoding-from-a-meta-element
 func extractCharsetFromMeta(s scan.Bytes) []byte {
 	for {
-		i := bytes.Index(s, []byte("charset"))
+		// The spec matches the word charset case insensitively. IgnoreCase is
+		// lenient for the upper case bytes of the pattern, so the pattern is
+		// spelled in upper case.
+		i, k := s.Search([]byte("CHARSET"), scan.IgnoreCase)
 		if i == -1 {
 			return nil
 		}
-		s.Advance(i + len("charset"))
+		s.Advance(i + k)
 		for scan.ByteIsWS(s.Peek()) {
 			s.Advance(1)
 		}
